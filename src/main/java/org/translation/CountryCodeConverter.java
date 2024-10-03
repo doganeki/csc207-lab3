@@ -4,17 +4,26 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-// TODO CheckStyle: Wrong lexicographical order for 'java.util.HashMap' import (remove this comment once resolved)
-import java.util.HashMap;
-import java.util.Map;
+
+// import java.util.HashMap;
+// import java.util.Map;
+
+// TO-DO CheckStyle: Wrong lexicographical order for 'java.util.HashMap' import (remove this comment once resolved)
 
 /**
  * This class provides the service of converting country codes to their names.
  */
 public class CountryCodeConverter {
 
-    // TODO Task: pick appropriate instance variable(s) to store the data necessary for this class
+    // TO-DO Task: pick appropriate instance variable(s) to store the data necessary for this class
+    private static final int INDEX_4 = 4;
+    private static final int INDEX_7 = 7;
+    private static final int INDEX_11 = 11;
+
+    private final List<String> countries = new ArrayList<>();
+    private final List<String> countryCodes = new ArrayList<>();
 
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
@@ -30,13 +39,17 @@ public class CountryCodeConverter {
      * @throws RuntimeException if the resource file can't be loaded properly
      */
     public CountryCodeConverter(String filename) {
-
         try {
             List<String> lines = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
 
-            // TODO Task: use lines to populate the instance variable(s)
+            // TO-DO Task: use lines to populate the instance variable(s)
+            for (int i = 1; i < lines.size(); i++) {
+                int length = lines.get(i).length();
 
+                countryCodes.add(lines.get(i).substring(length - INDEX_7, length - INDEX_4));
+                countries.add(lines.get(i).substring(0, length - INDEX_11));
+            }
         }
         catch (IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
@@ -50,8 +63,15 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        // TODO Task: update this code to use an instance variable to return the correct value
-        return code;
+        // TO-DO Task: update this code to use an instance variable to return the correct value
+        // return code;
+        for (int i = 0; i < countryCodes.size(); i++) {
+            if (code.toUpperCase().equals(countryCodes.get(i))) {
+                return countries.get(i);
+            }
+        }
+
+        return "Country not found";
     }
 
     /**
@@ -60,8 +80,15 @@ public class CountryCodeConverter {
      * @return the 3-letter code of the country
      */
     public String fromCountry(String country) {
-        // TODO Task: update this code to use an instance variable to return the correct value
-        return country;
+        // TO-DO Task: update this code to use an instance variable to return the correct value
+        // return country;
+        for (int i = 0; i < countries.size(); i++) {
+            if (country.toUpperCase().equals(countries.get(i))) {
+                return countryCodes.get(i);
+            }
+        }
+
+        return "Country not found";
     }
 
     /**
@@ -69,7 +96,8 @@ public class CountryCodeConverter {
      * @return how many countries are included in this code converter.
      */
     public int getNumCountries() {
-        // TODO Task: update this code to use an instance variable to return the correct value
-        return 0;
+        // TO-DO Task: update this code to use an instance variable to return the correct value
+        // return 0;
+        return countryCodes.size();
     }
 }
